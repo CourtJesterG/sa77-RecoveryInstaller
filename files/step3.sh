@@ -19,5 +19,9 @@ echo copy sh to system.
 cat /data/local/tmp/cwm/sh > /system/xbin/sh
 chmod 755 /system/xbin/sh
 
+echo copy busybox to system.
+cat /data/local/tmp/cwm/busybox > /system/xbin/busybox
+chmod 755 /system/xbin/busybox
+
 echo remount ro /system
 mount -o remount ro /system
