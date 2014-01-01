@@ -1,26 +1,14 @@
 #!/system/xbin/sh
-	rm /cache/recovery/boot
-	# remount rootfs rw
-	mount -o remount,rw rootfs /
 
-	## /data
-	umount -l /dev/block/mmcblk0p31
-        ## /cache
-	umount -l /dev/block/mmcblk0p30
+# remount rootfs rw
+mount -o remount,rw rootfs /
 
-	# Mount recovery partition
-	cd /
-	rm -r /sbin /sdcard
-	rm -f etc init* uevent* default*
-	if [ -f /system/bin/recovery.tar ]
-	then
-		tar -xf /system/bin/recovery.tar
-	fi
+cp /system/xbin/sh /sbin/sh
+chmod 755 /sbin/sh
 
-	# Umount /system
-	umount -l /dev/block/mmcblk0p28
+cp /system/bin/recovery.sh /sbin/recovery.sh
+chmod 755 /sbin/recovery.sh
 
-	# chroot
-	chroot / /init
+/sbin/recovery.sh
 
-	
+exit 0
