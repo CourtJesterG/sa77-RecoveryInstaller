@@ -9,6 +9,6 @@ chmod 755 /sbin/sh
 cp /system/bin/recovery.sh /sbin/recovery.sh
 chmod 755 /sbin/recovery.sh
 
-/sbin/recovery.sh
+/sbin/recovery.sh &
 
-exit 0
+exit
