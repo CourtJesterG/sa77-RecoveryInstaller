@@ -1,25 +1,24 @@
-#!/sbin/sh
+#!/sbin/busybox sh
 
-	rm /cache/recovery/boot
-	
-	## /data
-	umount -l /dev/block/mmcblk0p31
-        ## /cache
-	umount -l /dev/block/mmcblk0p30
+BUSYBOX=/sbin/busybox
 
-	# Mount recovery partition
-	cd /
-	rm -r /sbin /sdcard
-	rm -f etc init* uevent* default*
-	if [ -f /system/bin/recovery.tar ]
-	then
-		tar -xf /system/bin/recovery.tar
-	fi
+${BUSYBOX} rm /cache/recovery/boot
 
-	# Umount /system
-	umount -l /dev/block/mmcblk0p28
+## /data
+${BUSYBOX} umount -l /dev/block/mmcblk0p31
+## /cache
+${BUSYBOX} umount -l /dev/block/mmcblk0p30
 
-	# chroot
-	chroot / /init
+# Mount recovery partition
+cd /
+rm -r /sbin /sdcard
+rm -f etc init* uevent* default*
+if [ -f /system/bin/recovery.tar ]; then
+	tar -xf /system/bin/recovery.tar
+fi
 
-	
+# Umount /system
+umount -l /dev/block/mmcblk0p28
+
+# Execute recovery INIT
+exec /init

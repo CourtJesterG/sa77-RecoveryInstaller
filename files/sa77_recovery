@@ -1,14 +1,14 @@
-#!/system/xbin/sh
+#!/system/xbin/busybox sh
+
+BUSYBOX=/system/xbin/busybox
 
 # remount rootfs rw
-mount -o remount,rw rootfs /
+${BUSYBOX} mount -o remount,rw rootfs /
 
-cp /system/xbin/sh /sbin/sh
-chmod 755 /sbin/sh
+${BUSYBOX} cp /system/xbin/busybox /sbin/busybox
+${BUSYBOX} chmod 755 /sbin/busybox
 
-cp /system/bin/recovery.sh /sbin/recovery.sh
-chmod 755 /sbin/recovery.sh
+${BUSYBOX} cp /system/bin/recovery.sh /sbin/recovery.sh
+${BUSYBOX} chmod 755 /sbin/recovery.sh
 
-/sbin/recovery.sh &
-
-exit
+exec /sbin/recovery.sh
