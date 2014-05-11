@@ -97,6 +97,8 @@ ${BUSYBOX} umount -l /mnt/idd		# Appslog
 ${BUSYBOX} umount -l /data/idd		# Appslog
 ${BUSYBOX} umount -l /data		# Userdata
 ${BUSYBOX} umount -l /lta-label		# LTALabel
+${BUSYBOX} umount -l /sdcard		# SDCard
+${BUSYBOX} umount -l /storage/sdcard	# SDCard
 ${BUSYBOX} umount -l /storage/sdcard1	# SDCard1
 ${BUSYBOX} umount -l /cache		# Cache
 ${BUSYBOX} umount -l /system		# System
@@ -104,7 +106,7 @@ ${BUSYBOX} umount -l /system		# System
 ${BUSYBOX} sync
 
 cd /
-${BUSYBOX} rm -rf etc init* uevent* default*
+${BUSYBOX} rm -rf etc init* uevent* default* sdcard
 ${BUSYBOX} tar xf /sbin/recovery.tar
 
 ${BUSYBOX} sleep 1
