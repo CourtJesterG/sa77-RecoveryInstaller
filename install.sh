@@ -1,4 +1,4 @@
-echo "** CWM for Xperia L - Rachit Rawat **"
+echo "** CWM for Xperia L - Rachit Rawat and [NUT] **"
 
 cd files
 
@@ -16,9 +16,8 @@ echo =============================================
 echo Step2 : Sending files...
 echo =============================================
 adb shell "mkdir /data/local/tmp/cwm"
-adb push install-recovery.sh /data/local/tmp/cwm
-adb push sa77_recovery /data/local/tmp/cwm
 adb push recovery.sh /data/local/tmp/cwm
+adb push e2fsck.sh /data/local/tmp/cwm
 adb push recovery.tar /data/local/tmp/cwm
 adb push busybox /data/local/tmp/cwm
 adb push step3.sh /data/local/tmp/cwm
