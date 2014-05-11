@@ -1,0 +1,164 @@
+/dev/null                 0666   root       root
+/dev/zero                 0666   root       root
+/dev/full                 0666   root       root
+/dev/ptmx                 0666   root       root
+/dev/tty                  0666   root       root
+/dev/random               0666   root       root
+/dev/urandom              0666   root       root
+/dev/ashmem               0666   root       root
+/dev/binder               0666   root       root
+
+# Anyone can read the logs, but if they're not in the "logs"
+# group, then they'll only see log entries for their UID.
+/dev/log/*                0666   root       log
+
+# the msm hw3d client device node is world writable/readable.
+/dev/msm_hw3dc            0666   root       root
+
+# the DIAG device node is not world writable/readable.
+/dev/diag                 0660   system     qcom_diag
+
+# gpu driver for adreno200 is globally accessible
+/dev/kgsl                 0666   root       root
+
+# kms driver for drm based gpu
+/dev/dri/*                0666   root       graphics
+
+# these should not be world writable
+/dev/diag_arm9            0660   radio      radio
+/dev/android_adb          0660   adb        adb
+/dev/android_adb_enable   0660   adb        adb
+/dev/ttyMSM0              0600   bluetooth  bluetooth
+/dev/uhid                 0660   system     net_bt_stack
+/dev/uinput               0660   system     net_bt_stack
+/dev/alarm                0664   system     radio
+/dev/tty0                 0660   root       system
+/dev/graphics/*           0660   system     graphics
+/dev/msm_hw3dm            0660   system     graphics
+/dev/input/*              0660   root       input
+/dev/eac                  0660   root       audio
+/dev/cam                  0660   root       camera
+/dev/pmem                 0660   system     graphics
+/dev/pmem_adsp*           0660   system     audio
+/dev/pmem_camera*         0660   system     camera
+/dev/oncrpc/*             0660   root       system
+/dev/adsp/*               0660   system     audio
+/dev/snd/*                0660   system     audio
+/dev/mt9t013              0660   system     system
+/dev/msm_camera/*         0660   system     system
+/dev/akm8976_daemon       0640   compass    system
+/dev/akm8976_aot          0640   compass    system
+/dev/akm8973_daemon       0640   compass    system
+/dev/akm8973_aot          0640   compass    system
+/dev/bma150               0640   compass    system
+/dev/cm3602               0640   compass    system
+/dev/akm8976_pffd         0640   compass    system
+/dev/lightsensor          0640   system     system
+/dev/msm_pcm_out*         0660   system     audio
+/dev/msm_pcm_in*          0660   system     audio
+/dev/msm_pcm_ctl*         0660   system     audio
+/dev/msm_snd*             0660   system     audio
+/dev/msm_mp3*             0660   system     audio
+/dev/audience_a1026*      0660   system     audio
+/dev/tpa2018d1*           0660   system     audio
+/dev/msm_audpre           0660   system     audio
+/dev/msm_audio_ctl        0660   system     audio
+/dev/htc-acoustic         0660   system     audio
+/dev/vdec                 0660   system     audio
+/dev/qseecom              0660   system     drmrpc
+/dev/q6venc               0660   system     audio
+/dev/snd/dsp              0660   system     audio
+/dev/snd/dsp1             0660   system     audio
+/dev/snd/mixer            0660   system     audio
+/dev/smd0                 0640   radio      radio
+/dev/qmi                  0640   radio      radio
+/dev/qmi0                 0640   radio      radio
+/dev/qmi1                 0640   radio      radio
+/dev/qmi2                 0640   radio      radio
+/dev/bus/usb/*            0660   root       usb
+/dev/mtp_usb              0660   root       mtp
+/dev/usb_accessory        0660   root       usb
+/dev/tun                  0660   system     vpn
+
+# CDMA radio interface MUX
+/dev/ts0710mux*           0640   radio      radio
+/dev/ppp                  0660   radio      vpn
+
+# sysfs properties
+/sys/devices/virtual/input/input*   enable      0660  root   input
+/sys/devices/virtual/input/input*   poll_delay  0660  root   input
+/sys/devices/virtual/usb_composite/*   enable      0664  root   system
+
+#hhh, 20121126, [ ] fix CTS permission issue for BMA250(g-sensor)
+/sys/devices/virtual/input/input*   delay  0664  root   input
+/sys/devices/virtual/input/input*   range  0664  root   system
+/sys/devices/virtual/input/input*   bandwidth  0664  root   system
+/sys/devices/virtual/input/input*   fast_calibration_x  0664  root   system
+/sys/devices/virtual/input/input*   fast_calibration_y  0664  root   system
+/sys/devices/virtual/input/input*   fast_calibration_z  0664  root   system
+/sys/devices/virtual/input/input*   eeprom_writing  0664  root   system
+/sys/devices/virtual/input/input*   selftest  0664  root   system
+/sys/devices/virtual/input/input*   softreset  0664  root   system
+# end
+
+#S:Andy_li,20121128, for CTS test
+/sys/devices/virtual/input/input0    prox_piltl    0664   root    system
+/sys/devices/virtual/input/input0    prox_pilth    0664   root    system
+/sys/devices/virtual/input/input1    als_power_state    0664   root    input
+/sys/devices/virtual/input/input1    prox_power_state    0664   root    input
+/sys/devices/virtual/input/input1    lux_ga    0664   root    system
+/sys/devices/virtual/input/input1    delay    0664   root    input
+#E:Andy_li,20121128
+
+#hhh, 20120708, [ ] for AKM8963(e-compass)
+/dev/akm8963_dev                 0660   system     system
+# end
+
+#S:20121224, for TP Calibration
+/sys/devices/i2c-3/3-0024		drv_rw_regid		0664 	root 	system
+/sys/devices/i2c-3/3-0024		drv_rw_reg_data 	0664	root	system
+/sys/devices/i2c-3/3-0024		raw_counts		0664	root 	system
+/sys/devices/i2c-3/3-0024 	        drv_irq			0664	root 	system
+#E
+
+#S:Mark_Lin 20121203 ,BugID:1966-[SA77][BSP][LED]Fix CTS permission issue
+/sys/devices/platform/msm_ssbi.0/pm8038-core/pm8xxx-led/leds/led:rgb_red   brightness      0664  root   system
+/sys/devices/platform/msm_ssbi.0/pm8038-core/pm8xxx-led/leds/led:rgb_red   flashmode      0664  root   system
+/sys/devices/platform/msm_ssbi.0/pm8038-core/pm8xxx-led/leds/led:rgb_red   onms      0664  root   system
+/sys/devices/platform/msm_ssbi.0/pm8038-core/pm8xxx-led/leds/led:rgb_red   offms      0664  root   system
+/sys/devices/platform/msm_ssbi.0/pm8038-core/pm8xxx-led/leds/led:rgb_red   testbrightness      0664  root   system
+/sys/devices/platform/msm_ssbi.0/pm8038-core/pm8xxx-led/leds/led:rgb_red   tunebrightness      0664  root   system
+/sys/devices/platform/msm_ssbi.0/pm8038-core/pm8xxx-led/leds/led:rgb_red   batterypara      0664  root   system
+/sys/devices/platform/msm_ssbi.0/pm8038-core/pm8xxx-led/leds/led:rgb_green   brightness      0664  root   system
+/sys/devices/platform/msm_ssbi.0/pm8038-core/pm8xxx-led/leds/led:rgb_green   flashmode      0664  root   system
+/sys/devices/platform/msm_ssbi.0/pm8038-core/pm8xxx-led/leds/led:rgb_green   onms      0664  root   system
+/sys/devices/platform/msm_ssbi.0/pm8038-core/pm8xxx-led/leds/led:rgb_green   offms      0664  root   system
+/sys/devices/platform/msm_ssbi.0/pm8038-core/pm8xxx-led/leds/led:rgb_green   testbrightness      0664  root   system
+/sys/devices/platform/msm_ssbi.0/pm8038-core/pm8xxx-led/leds/led:rgb_green   tunebrightness      0664  root   system
+/sys/devices/platform/msm_ssbi.0/pm8038-core/pm8xxx-led/leds/led:rgb_green   batterypara      0664  root   system
+/sys/devices/platform/msm_ssbi.0/pm8038-core/pm8xxx-led/leds/led:rgb_blue   brightness      0664  root   system
+/sys/devices/platform/msm_ssbi.0/pm8038-core/pm8xxx-led/leds/led:rgb_blue   flashmode      0664  root   system
+/sys/devices/platform/msm_ssbi.0/pm8038-core/pm8xxx-led/leds/led:rgb_blue   onms      0664  root   system
+/sys/devices/platform/msm_ssbi.0/pm8038-core/pm8xxx-led/leds/led:rgb_blue   offms      0664  root   system
+/sys/devices/platform/msm_ssbi.0/pm8038-core/pm8xxx-led/leds/led:rgb_blue   testbrightness      0664  root   system
+/sys/devices/platform/msm_ssbi.0/pm8038-core/pm8xxx-led/leds/led:rgb_blue   tunebrightness      0664  root   system
+/sys/devices/platform/msm_ssbi.0/pm8038-core/pm8xxx-led/leds/led:rgb_blue   batterypara      0664  root   system
+#E:Mark_Lin 20121203 ,BugID:1966-[SA77][BSP][LED]Fix CTS permission issue
+#S:Mark_Lin 20130704 ,BugID:3262-[SA77][LED]Implement XSSM illumination feature on MR1
+/sys/devices/platform/msm_ssbi.0/pm8038-core/pm8xxx-led/leds/wled   tunebrightness      0664  root   system
+/sys/devices/platform/msm_ssbi.0/pm8038-core/pm8xxx-led/leds/wled   batterypara      0664  root   system
+/sys/devices/platform/msm_ssbi.0/pm8038-core/pm8xxx-led/leds/wled   flashmode      0664  root   system
+/sys/devices/platform/msm_ssbi.0/pm8038-core/pm8xxx-led/leds/wled   onms      0664  root   system
+/sys/devices/platform/msm_ssbi.0/pm8038-core/pm8xxx-led/leds/wled   offms      0664  root   system
+#E:Mark_Lin 20130704 ,BugID:3262-[SA77][LED]Implement XSSM illumination feature on MR1
+
+#[SA77] ==> CCI KLog, added by Jimmy@CCI
+/dev/cciklog              0666   root       system
+/sys/devices/virtual/misc/cciklog    modem_log_addr    0660  root   radio
+/sys/devices/virtual/misc/cciklog    prev_reboot_reason    0444  root   system
+/sys/devices/virtual/misc/cciklog    prev_normal_boot    0444  root   system
+#[SA77] <== CCI KLog, added by Jimmy@CCI
+
+#S:YF for CalibrateBTM
+/sys/devices/platform/msm_ssbi.0/pm8038-core/pm8xxx-adc    CalibrateBTM    0660  root   radio
+#E:YF for CalibrateBTM
