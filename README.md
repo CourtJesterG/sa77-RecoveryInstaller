@@ -1,7 +1,9 @@
-sa77-CWM-Installer
+CWM-Installer
 =================
 
-CWM installer for sa77 locked bootloader. Compatible with windows/Linux.
+CWM installer for locked bootloader. Compatible with windows/Linux.
+
+Uses e2fsck as hijack binary.
 
 Requirements:
 1. Rooted Phone
