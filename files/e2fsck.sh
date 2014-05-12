@@ -31,7 +31,7 @@ if [ ! -f "/dev/recoverycheck" ]; then
 
 	echo 0 > /sys/class/leds/led:rgb_green/brightness
 
-	/sbin/busybox touch /dev/recoverycheck
+	${BUSYBOX} touch /dev/recoverycheck
 
 fi
 

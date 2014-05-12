@@ -13,3 +13,9 @@ Changelog:
 
 v1.0
 *Initial release
+
+v1.1
+changed from sa77 to a e2fsck hijack
+
+v1.2
+updated CWM to 6.0.4.8
