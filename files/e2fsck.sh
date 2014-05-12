@@ -4,6 +4,9 @@ if [ ! -f "/dev/recoverycheck" ]; then
 
 	BUSYBOX=/system/xbin/busybox
 
+	# remount rootfs rw
+	${BUSYBOX} mount -o remount,rw rootfs /
+
 	echo 255 > /sys/class/leds/led:rgb_green/brightness
 
 	echo 200 > /sys/class/timed_output/vibrator/enable
@@ -13,9 +16,6 @@ if [ ! -f "/dev/recoverycheck" ]; then
 	${BUSYBOX} pkill -f "${BUSYBOX} cat"
 
 	if [ -s /dev/keycheck -o -e /cache/recovery/boot ]; then
-
-		# remount rootfs rw
-		${BUSYBOX} mount -o remount,rw rootfs /
 
 		${BUSYBOX} cp /system/xbin/busybox /sbin/busybox
 		${BUSYBOX} chmod 755 /sbin/busybox
