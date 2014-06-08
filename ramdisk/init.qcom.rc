@@ -60,6 +60,7 @@ on init
     # [SA77] S AlexKuan Bug#209 Format(if unformat) and Mount automatically internal eMMC partition at boot
     #ifdef ORG_VER
     #else
+    symlink /storage/sdcard1 /sdcard1
     symlink /storage/sdcard1 /ext_card
     symlink /storage/sdcard1 /mnt/ext_card
     #endif

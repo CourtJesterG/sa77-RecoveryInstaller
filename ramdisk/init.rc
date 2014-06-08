@@ -424,8 +424,6 @@ on boot
 # Set this property so surfaceflinger is not started by system_init
     setprop system_init.startsurfaceflinger 0
 
-exec /sbin/sysinit.sh
-
     class_start core
     class_start main
 
@@ -599,6 +597,10 @@ service bootanim /system/bin/bootanimation
 service installd /system/bin/installd
     class main
     socket installd stream 600 system system
+
+service flash_recovery /system/etc/install-recovery.sh
+    class main
+    oneshot
 
 service racoon /system/bin/racoon
     class main
