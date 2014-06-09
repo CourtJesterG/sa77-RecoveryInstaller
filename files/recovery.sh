@@ -50,7 +50,7 @@ ${BUSYBOX} mount -o remount,rw rootfs /
 ${BUSYBOX} rm /cache/recovery/boot
 ${BUSYBOX} cp /system/bin/recovery.tar /sbin/
 
-SETLED on 255 255 0
+SETLED on 0 0 0
 
 # Stop init services.
 for SVCNAME in $(getprop | ${BUSYBOX} grep -E '^\[init\.svc\..*\]: \[running\]' | ${BUSYBOX} sed 's/\[init\.svc\.\(.*\)\]:.*/\1/g;'); do
@@ -70,21 +70,21 @@ done
 ${BUSYBOX} sync
 
 ## /boot/modem_fs1
-${BUSYBOX} umount -l /dev/block/mmcblk0p6
+#${BUSYBOX} umount -l /dev/block/mmcblk0p6
 ## /boot/modem_fs2
-${BUSYBOX} umount -l /dev/block/mmcblk0p7
+#${BUSYBOX} umount -l /dev/block/mmcblk0p7
 ## /system
-${BUSYBOX} umount -l /dev/block/mmcblk0p13
+${BUSYBOX} umount -l /dev/block/mmcblk0p28
 ## /data
-${BUSYBOX} umount -l /dev/block/mmcblk0p15
+${BUSYBOX} umount -l /dev/block/mmcblk0p31
 ## /mnt/idd
-${BUSYBOX} umount -l /dev/block/mmcblk0p10
+#${BUSYBOX} umount -l /dev/block/mmcblk0p10
 ## /cache
-${BUSYBOX} umount -l /dev/block/mmcblk0p14
+${BUSYBOX} umount -l /dev/block/mmcblk0p30
 ## /lta-label
-${BUSYBOX} umount -l /dev/block/mmcblk0p12
+#${BUSYBOX} umount -l /dev/block/mmcblk0p12
 ## /sdcard (External)
-${BUSYBOX} umount -l /dev/block/mmcblk1p1
+#${BUSYBOX} umount -l /dev/block/mmcblk1p1
 
 ${BUSYBOX} umount -l /acct
 ${BUSYBOX} umount -l /dev/cpuctl
@@ -109,8 +109,8 @@ cd /
 ${BUSYBOX} rm -rf etc init* uevent* default* sdcard
 ${BUSYBOX} tar xf /sbin/recovery.tar
 
-${BUSYBOX} sleep 1
-SETLED off
+#${BUSYBOX} sleep 1
+#SETLED off
 
 # Execute recovery INIT
 ${BUSYBOX} chroot / /init
