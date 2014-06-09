@@ -1,8 +1,9 @@
 setterm -bold
 
-echo "** Recovery Installer for Xperia L - v1.4**"
-echo "**    By Rachit Rawat and [NUT]          **"
+echo "** Recovery Installer for Xperia L - v1.4 **"
+echo "**    By Rachit Rawat and [NUT]           **"
 echo 
+cd files
 
 echo
 echo ===============================================
@@ -25,7 +26,6 @@ read ANS
 
 case $ANS in
 1) 
-cd files
 
 adb kill-server
 adb start-server
@@ -52,7 +52,6 @@ echo
 ;;
 
 2) 
-cd files
 if ! test -d ../input
 then mkdir ../input
 fi
@@ -82,7 +81,6 @@ fi
 ;;
 
 3) echo "Uninstalling recovery.."
-cd files
 adb shell "mkdir /data/local/tmp/cwm"
 adb push busybox /data/local/tmp/cwm
 adb push unin.sh /data/local/tmp/cwm
