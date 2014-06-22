@@ -22,6 +22,7 @@ echo "2. Install some other recovery"
 echo "3. Uninstall existing recovery"
 echo "4. Exit"
 tput sgr0
+printf "Enter choice:"
 read ANS
 
 case $ANS in
