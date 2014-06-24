@@ -1,3 +1,0 @@
-on post-fs-data
-    exec /system/bin/rm -r /data/core
-
