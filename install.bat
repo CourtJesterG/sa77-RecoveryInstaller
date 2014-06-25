@@ -31,7 +31,7 @@ IF %M%==2 GOTO two
 IF %M%==3 GOTO three
 IF %M%==4 GOTO four
 IF %M%==5 GOTO five
-IF %M%==5 GOTO six
+IF %M%==6 GOTO six
 
 :one
 echo =============================================
