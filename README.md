@@ -31,3 +31,10 @@ v1.4
 * switch to one time cyan LED
 * Vibrator now triggers if keycheck is detected
 * code cleanup
+
+v1.5 : Hot update
+* Fix screen shift issue completely
+* Update CWM recovery
+* philz recovery added as an option
+* Open xda thread option in shell script too
+* TWRP WIP
