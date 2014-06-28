@@ -124,7 +124,7 @@ echo "Finished!"
 5) 
 if which xdg-open > /dev/null
 then
-  xdg-open http://forum.xda-developers.com/xperia-l/development/cwm-recovery-installer-t2589320
+  xdg-open http://forum.xda-developers.com/xperia-l/orig-development/cwm-recovery-installer-t2589320
 elif which gnome-open > /dev/null
 then
   gnome-open URL

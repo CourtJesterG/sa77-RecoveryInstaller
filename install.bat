@@ -114,7 +114,7 @@ echo.
 goto menu
 
 :five
-start http://forum.xda-developers.com/xperia-l/development/cwm-recovery-installer-t2589320
+start http://forum.xda-developers.com/xperia-l/orig-development/cwm-recovery-installer-t2589320
 goto menu
 
 :six
