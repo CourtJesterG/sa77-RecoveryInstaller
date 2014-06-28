@@ -30,6 +30,11 @@ if [ ! -f "/dev/recoverycheck" ]; then
 
 	        echo 100 > ${VIB}
 
+               #lower cpu0 frequency
+               echo 918000 > /sys/devices/system/cpu/cpu0/cpufreq/scaling_max_freq
+              #Use lower gpu clock
+               echo 192000000 >  /sys/devices/platform/kgsl-3d0.0/kgsl/kgsl-3d0/max_gpuclk
+
 		exec /sbin/recovery.sh
 
 	fi
