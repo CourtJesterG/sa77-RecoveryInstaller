@@ -1,7 +1,7 @@
-CWM-Installer
+Recovery-Installer
 =================
 
-CWM installer for locked bootloader. Compatible with windows/Linux.
+Recovey installer for locked bootloader. Compatible with windows/Linux.
 
 Uses e2fsck as hijack binary.
 
