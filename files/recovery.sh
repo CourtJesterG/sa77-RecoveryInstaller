@@ -4,53 +4,9 @@ export PATH=/sbin:/system/xbin:/system/bin
 
 BUSYBOX="/sbin/busybox"
 
-REDLED=$(/sbin/busybox ls -1 /sys/class/leds|/sbin/busybox grep "red\|LED1_R")
-GREENLED=$(/sbin/busybox ls -1 /sys/class/leds|/sbin/busybox grep "green\|LED1_G")
-BLUELED=$(/sbin/busybox ls -1 /sys/class/leds|/sbin/busybox grep "blue\|LED1_B")
-
-SETLED() {
-
-        BRIGHTNESS_LED_RED="/sys/class/leds/$REDLED/brightness"
-        CURRENT_LED_RED="/sys/class/leds/$REDLED/led_current"
-        BRIGHTNESS_LED_GREEN="/sys/class/leds/$GREENLED/brightness"
-        CURRENT_LED_GREEN="/sys/class/leds/$GREENLED/led_current"
-        BRIGHTNESS_LED_BLUE="/sys/class/leds/$BLUELED/brightness"
-        CURRENT_LED_BLUE="/sys/class/leds/$BLUELED/led_current"
-
-        if [ "$1" = "on" ]; then
-
-                echo "$2" > ${BRIGHTNESS_LED_RED}
-                echo "$3" > ${BRIGHTNESS_LED_GREEN}
-                echo "$4" > ${BRIGHTNESS_LED_BLUE}
-
-                if [ -f "$CURRENT_LED_RED" -a -f "$CURRENT_LED_GREEN" -a -f "$CURRENT_LED_BLUE" ]; then
-
-                        echo "$2" > ${CURRENT_LED_RED}
-                        echo "$3" > ${CURRENT_LED_GREEN}
-                        echo "$4" > ${CURRENT_LED_BLUE}
-                fi
-
-        else
-
-                echo "0" > ${BRIGHTNESS_LED_RED}
-                echo "0" > ${BRIGHTNESS_LED_GREEN}
-                echo "0" > ${BRIGHTNESS_LED_BLUE}
-
-                if [ -f "$CURRENT_LED_RED" -a -f "$CURRENT_LED_GREEN" -a -f "$CURRENT_LED_BLUE" ]; then
-
-                        echo "0" > ${CURRENT_LED_RED}
-                        echo "0" > ${CURRENT_LED_GREEN}
-                        echo "0" > ${CURRENT_LED_BLUE}
-                fi
-
-        fi
-}
-
 ${BUSYBOX} mount -o remount,rw rootfs /
 ${BUSYBOX} rm /cache/recovery/boot
 ${BUSYBOX} cp /system/bin/recovery.tar /sbin/
-
-SETLED on 0 0 0
 
 # Stop init services.
 for SVCNAME in $(getprop | ${BUSYBOX} grep -E '^\[init\.svc\..*\]: \[running\]' | ${BUSYBOX} sed 's/\[init\.svc\.\(.*\)\]:.*/\1/g;'); do
@@ -108,9 +64,6 @@ ${BUSYBOX} sync
 cd /
 ${BUSYBOX} rm -rf etc init* uevent* default* sdcard
 ${BUSYBOX} tar xf /sbin/recovery.tar
-
-#${BUSYBOX} sleep 1
-#SETLED off
 
 # Execute recovery INIT
 ${BUSYBOX} chroot / /init
