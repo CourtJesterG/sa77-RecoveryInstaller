@@ -15,7 +15,7 @@ if [ ! -f "/dev/recoverycheck" ]; then
         echo 255 > ${B_LED}
 
 	${BUSYBOX} cat /dev/input/event11 > /dev/keycheck&
-	${BUSYBOX} sleep 2
+	${BUSYBOX} sleep 1
 	${BUSYBOX} pkill -f "${BUSYBOX} cat"
 
 	if [ -s /dev/keycheck -o -e /cache/recovery/boot ]; then
