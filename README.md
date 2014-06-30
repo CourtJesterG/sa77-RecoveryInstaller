@@ -38,3 +38,9 @@ v1.5 : Hot update
 * philz recovery added as an option
 * Open xda thread option in shell script too
 * TWRP WIP
+
+v1.6 
+* Fix URLs
+* Unclutter code
+* Remove unecessary delay during boot
+* battery improvements
