@@ -1,16 +1,42 @@
 setterm -bold
+VER="1.7"
+ADB_WAIT="adb wait-for-device"
+ADB_KILL="adb kill-server"
+ADB_START="adb start-server"
+ADB_PULL="adb pull /system/build.prop"
+CHECK_DEVICE="ro.semc.product.name"
+CHECK_DEVICE_TAOSHAN="ro.semc.product.name=Xperia L"
+CHECK_FIRMWARE="ro.build.id="
 
-echo "** Recovery Installer for Xperia L - v1.5 **"
-echo "**    By Rachit Rawat and [NUT]           **"
+echo "** Recovery Installer for Xperia L - $VER   **"
+echo "**        By Rachit Rawat and [NUT]        **"
 echo 
 cd files
 
 echo
 echo ===============================================
-echo Step1 : Connect device with usb debugging on...
+echo Connect device with usb debugging on...
 echo ===============================================
-adb wait-for-device
-echo Device Detected.
+
+eval $ADB_WAIT
+
+# Pull build.prop
+eval $ADB_PULL
+echo
+
+# Check if correct device is connected
+if ! grep -q "$CHECK_DEVICE_TAOSHAN" build.prop
+then
+STR=$(grep "$CHECK_DEVICE" build.prop)
+echo "${STR##*=} is not supported!"
+rm build.prop
+else
+STR=$(grep "$CHECK_DEVICE" build.prop)
+echo "Device : ${STR##*=}"
+STR2=$(grep "$CHECK_FIRMWARE" build.prop)
+echo "FW : ${STR2##*=}"
+rm build.prop
+
 echo
 
 while :
@@ -30,11 +56,8 @@ read ANS
 case $ANS in
 1) 
 
-adb kill-server
-adb start-server
-
 echo =============================================
-echo Step2 : Installing CWM recovery...
+echo Installing CWM recovery...
 echo =============================================
 adb shell "mkdir /data/local/tmp/cwm"
 adb push recovery.sh /data/local/tmp/cwm
@@ -47,8 +70,6 @@ adb shell "chmod 755 /data/local/tmp/cwm/step3.sh"
 adb shell "su -c /data/local/tmp/cwm/step3.sh"
 adb shell "rm -r /data/local/tmp/cwm"
 
-adb kill-server
-
 echo
 echo Finished!
 echo
@@ -56,11 +77,8 @@ echo
 
 2) 
 
-adb kill-server
-adb start-server
-
 echo =============================================
-echo Step2 : Installing philZ recovery...
+echo Installing philZ recovery...
 echo =============================================
 adb shell "mkdir /data/local/tmp/cwm"
 adb push recovery.sh /data/local/tmp/cwm
@@ -73,24 +91,23 @@ adb shell "chmod 755 /data/local/tmp/cwm/step3.sh"
 adb shell "su -c /data/local/tmp/cwm/step3.sh"
 adb shell "rm -r /data/local/tmp/cwm"
 
-adb kill-server
-
 echo
 echo Finished!
 echo
 ;;
 
 3) 
-if ! test -d ../input
+
+if [ -d ../input ]
 then mkdir ../input
 fi
 
-echo Place your recovery.tar in input folder and press enter.
+echo "Place your recovery.tar in input folder and press enter"
 read ANS2
 if test  -e ../input/recovery.tar
    then echo "Recovery found."
 echo =============================================
-echo Step2 : Installing recovery...
+echo Installing recovery...
 echo =============================================
 adb shell "mkdir /data/local/tmp/cwm"
 adb push recovery.sh /data/local/tmp/cwm
@@ -109,7 +126,11 @@ else echo "Recovery not found!"
 fi
 ;;
 
-4) echo "Uninstalling recovery.."
+4) 
+
+echo =============================================
+echo Uninstalling recovery...
+echo =============================================
 adb shell "mkdir /data/local/tmp/cwm"
 adb push busybox /data/local/tmp/cwm
 adb push unin.sh /data/local/tmp/cwm
@@ -122,6 +143,7 @@ echo "Finished!"
 ;;
 
 5) 
+
 if which xdg-open > /dev/null
 then
   xdg-open http://forum.xda-developers.com/xperia-l/orig-development/cwm-recovery-installer-t2589320
@@ -131,9 +153,16 @@ then
 fi
 ;;
 
-6) 
+6)
+ 
 exit
 ;;
 
 esac
+
 done
+
+fi
+
+echo Auto exit in 3 seconds!
+sleep 3
