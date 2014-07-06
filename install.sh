@@ -98,7 +98,7 @@ echo
 
 3) 
 
-if [ -d ../input ]
+if [ ! -d ../input ]
 then mkdir ../input
 fi
 
