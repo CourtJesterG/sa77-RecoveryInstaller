@@ -1,7 +1,7 @@
 @echo off
 cls
 COLOR B
-echo ** Recovery Installer for Xperia L - v1.5 **
+echo ** Recovery Installer for Xperia L - v1.7 **
 echo **    By Rachit Rawat and [NUT]           ** 
 echo.
 

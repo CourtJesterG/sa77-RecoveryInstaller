@@ -1,13 +1,13 @@
 Recovery-Installer
-=================
+==================
 
-Recovey installer for locked bootloader. Compatible with windows/Linux.
+Recovey installer for locked bootloader. Compatible with Windows/Linux/Mac.
 
 Uses e2fsck as hijack binary.
 
 Requirements:
 1. Rooted Phone
-2. 15.3.A.0.26 and above firmware
+2. 15.3.A.0.26 or above firmware
 
 Changelog:
 
@@ -44,3 +44,8 @@ v1.6
 * Unclutter code
 * Remove unecessary delay during boot
 * battery improvements
+
+v1.7
+* Update cwm to 6.0.5.0
+* Update adb drivers
+* script improvements for shell 
