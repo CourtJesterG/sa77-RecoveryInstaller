@@ -49,3 +49,8 @@ v1.7
 * Update cwm to 6.0.5.0
 * Update adb drivers
 * script improvements for shell 
+
+v1.8
+* Add TWRP 
+* use exec instead of chroot (which broke TWRP earlier)
+* Code cleanup & optimizations

@@ -1,5 +1,5 @@
 setterm -bold
-VER="1.7"
+VER="1.8"
 ADB_WAIT="adb wait-for-device"
 ADB_KILL="adb kill-server"
 ADB_START="adb start-server"
@@ -15,7 +15,7 @@ cd files
 
 echo
 echo ===============================================
-echo Connect device with usb debugging on...
+echo Connect device with USB debugging on...
 echo ===============================================
 
 eval $ADB_WAIT
@@ -43,12 +43,13 @@ while :
 do
 tput setaf 6
 setterm -bold
-echo "1. Install CWM"
-echo "2. Install philZ recovery"
-echo "3. Install some other recovery"
-echo "4. Uninstall existing recovery"
-echo "5. View XDA thread"
-echo "6. Exit"
+echo "1. Install CWM recovery"
+echo "2. Install TWRP recovery"
+echo "3. Install philZ recovery"
+echo "4. Install some other recovery"
+echo "5. Uninstall existing recovery"
+echo "6. View XDA thread"
+echo "7. Exit"
 tput sgr0
 printf "Enter choice:"
 read ANS
@@ -78,6 +79,27 @@ echo
 2) 
 
 echo =============================================
+echo Installing TWRP recovery...
+echo =============================================
+adb shell "mkdir /data/local/tmp/cwm"
+adb push recovery.sh /data/local/tmp/cwm
+adb push e2fsck.sh /data/local/tmp/cwm
+adb push twrp/recovery.tar /data/local/tmp/cwm
+adb push busybox /data/local/tmp/cwm
+adb push step3.sh /data/local/tmp/cwm
+adb shell "chmod 755 /data/local/tmp/cwm/busybox"
+adb shell "chmod 755 /data/local/tmp/cwm/step3.sh"
+adb shell "su -c /data/local/tmp/cwm/step3.sh"
+adb shell "rm -r /data/local/tmp/cwm"
+
+echo
+echo Finished!
+echo
+;;
+
+3) 
+
+echo =============================================
 echo Installing philZ recovery...
 echo =============================================
 adb shell "mkdir /data/local/tmp/cwm"
@@ -96,7 +118,7 @@ echo Finished!
 echo
 ;;
 
-3) 
+4) 
 
 if [ ! -d ../input ]
 then mkdir ../input
@@ -126,7 +148,7 @@ else echo "Recovery not found!"
 fi
 ;;
 
-4) 
+5) 
 
 echo =============================================
 echo Uninstalling recovery...
@@ -142,7 +164,7 @@ echo
 echo "Finished!"
 ;;
 
-5) 
+6) 
 
 if which xdg-open > /dev/null
 then
@@ -153,7 +175,7 @@ then
 fi
 ;;
 
-6)
+7)
  
 exit
 ;;

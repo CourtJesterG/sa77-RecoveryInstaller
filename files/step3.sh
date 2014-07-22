@@ -20,10 +20,6 @@ fi
 ${BUSYBOX} cp /data/local/tmp/cwm/e2fsck.sh /system/bin/e2fsck
 ${BUSYBOX} chmod 755 /system/bin/e2fsck
 
-#echo "copy binary to system."
-#${BUSYBOX} cp /data/local/tmp/cwm/sa77_recovery /system/bin/sa77_recovery
-#${BUSYBOX} chmod 755 /system/bin/sa77_recovery
-
 echo "copy recovery script to system."
 ${BUSYBOX} cp /data/local/tmp/cwm/recovery.sh /system/bin/recovery.sh
 ${BUSYBOX} chmod 755 /system/bin/recovery.sh
