@@ -12,8 +12,11 @@ APK_PATH="tr_download/tr.apk"
 echo "** Recovery Installer for Xperia L - $VER   **"
 echo "**        By rachitrawat and [NUT]         **"
 echo 
+echo 
+printf "Initializing"; sleep 1; printf ".."; sleep 1; printf ".."; sleep 1;
 cd files
 
+clear
 echo
 echo ===============================================
 echo Connect device with USB debugging on...
@@ -103,24 +106,86 @@ rm su
 
 echo
 
+# main_menu function definition
+main_menu(){
 while :
 do
 tput setaf 6
 setterm -bold
-echo "1. Install CWM recovery"
-echo "2. Install TWRP recovery"
-echo "3. Install philZ recovery"
-echo "4. Install some other recovery"
-echo "5. Uninstall existing recovery"
-echo "6. View XDA thread"
-echo "7. Exit"
+echo "1. Install a recovery"
+echo "2. Uninstall existing recovery"
+echo "3. View XDA thread"
+echo "4. Exit"
 tput sgr0
 printf "Enter choice:"
 read ANS
 
 case $ANS in
-1) 
 
+1) 
+     # Call recovery_menu function
+     recovery_menu;;
+
+2) 
+
+echo =============================================
+echo Uninstalling recovery...
+echo =============================================
+adb shell "mkdir /data/local/tmp/cwm"
+adb push busybox /data/local/tmp/cwm
+adb push unin.sh /data/local/tmp/cwm
+adb shell "chmod 755 /data/local/tmp/cwm/busybox"
+adb shell "chmod 755 /data/local/tmp/cwm/unin.sh"
+adb shell "su -c /data/local/tmp/cwm/unin.sh"
+adb shell "rm -r /data/local/tmp/cwm"
+echo 
+echo "Finished!"
+;;
+
+3) 
+
+if which xdg-open > /dev/null
+then
+  xdg-open http://forum.xda-developers.com/xperia-l/orig-development/cwm-recovery-installer-t2589320
+elif which gnome-open > /dev/null
+then
+  gnome-open URL
+fi
+;;
+
+4)
+ 
+exit
+;;
+
+esac
+
+done
+
+echo Auto exit in 3 seconds!
+sleep 3
+}
+
+# recovery_menu function definition
+recovery_menu(){
+clear
+echo =============================================
+echo Available Recovery Options
+echo =============================================
+tput setaf 6
+setterm -bold
+echo "1. Install CWM recovery"
+echo "2. Install TWRP recovery"
+echo "3. Install philZ recovery"
+echo "4. Install custom recovery.tar"
+echo "5. Back"
+
+tput sgr0
+printf "Enter choice:"
+read ANS3
+
+case $ANS3 in
+1)
 echo =============================================
 echo Installing CWM recovery...
 echo =============================================
@@ -190,8 +255,8 @@ fi
 
 echo "Place your recovery.tar in input folder and press enter"
 read ANS2
-if test  -e ../input/recovery.tar
-   then echo "Recovery found."
+if [ -e ../input/recovery.tar ]; then
+   echo "Recovery found."
 echo =============================================
 echo Installing recovery...
 echo =============================================
@@ -212,43 +277,12 @@ else echo "Recovery not found!"
 fi
 ;;
 
-5) 
-
-echo =============================================
-echo Uninstalling recovery...
-echo =============================================
-adb shell "mkdir /data/local/tmp/cwm"
-adb push busybox /data/local/tmp/cwm
-adb push unin.sh /data/local/tmp/cwm
-adb shell "chmod 755 /data/local/tmp/cwm/busybox"
-adb shell "chmod 755 /data/local/tmp/cwm/unin.sh"
-adb shell "su -c /data/local/tmp/cwm/unin.sh"
-adb shell "rm -r /data/local/tmp/cwm"
-echo 
-echo "Finished!"
-;;
-
-6) 
-
-if which xdg-open > /dev/null
-then
-  xdg-open http://forum.xda-developers.com/xperia-l/orig-development/cwm-recovery-installer-t2589320
-elif which gnome-open > /dev/null
-then
-  gnome-open URL
-fi
-;;
-
-7)
- 
-exit
-;;
-
+5)
+     clear
+     main_menu;;
 esac
+}
 
-done
-
+# call main_menu function
+main_menu
 fi
-
-echo Auto exit in 3 seconds!
-sleep 3
