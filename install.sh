@@ -161,9 +161,6 @@ exit
 esac
 
 done
-
-echo Auto exit in 3 seconds!
-sleep 3
 }
 
 # recovery_menu function definition
@@ -286,3 +283,5 @@ esac
 # call main_menu function
 main_menu
 fi
+echo Auto exit in 3 seconds!
+sleep 3
