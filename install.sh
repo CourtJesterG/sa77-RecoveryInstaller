@@ -7,9 +7,10 @@ ADB_PULL="adb pull /system/build.prop"
 CHECK_DEVICE="ro.semc.product.name"
 CHECK_DEVICE_TAOSHAN="ro.semc.product.name=Xperia L"
 CHECK_FIRMWARE="ro.build.id="
+APK_PATH="tr_download/tr.apk"
 
 echo "** Recovery Installer for Xperia L - $VER   **"
-echo "**        By Rachit Rawat and [NUT]        **"
+echo "**        By rachitrawat and [NUT]         **"
 echo 
 cd files
 
@@ -21,7 +22,7 @@ echo ===============================================
 eval $ADB_WAIT
 
 # Pull build.prop
-eval $ADB_PULL
+eval $ADB_PULL 
 echo
 
 # Check if correct device is connected
@@ -36,6 +37,69 @@ echo "Device : ${STR##*=}"
 STR2=$(grep "$CHECK_FIRMWARE" build.prop)
 echo "FW : ${STR2##*=}"
 rm build.prop
+
+# Check for su
+echo 
+adb pull /system/xbin/su
+
+# Prompt if su is not found
+if [ $? -ne 0 ]; then
+   echo "Device is not rooted. Root access is required to proceed furthur."
+   read -p "Do you want to root it via towelroot? (y/n)" choice
+   case "$choice" in 
+   y|Y ) echo "Rooting device..."
+           # Check for a working internet connection
+           COUNTER=0
+           wget -q --tries=20 --timeout=10 http://www.google.com -O test.idx
+           if [ -s test.idx ]; then
+           COUNTER=1
+           echo "Working Internet Connection Available!"
+           echo "Downloading latest towelroot apk"
+ 
+           rm test.idx
+     
+           # Download latest towelroot apk 
+           wget -P tr_download/ https://towelroot.com/tr.apk 
+           if [ $? -ne 0 ]; then
+               COUNTER=0
+           fi 
+
+           # If working internet is not available or apk download somehow failed
+           elif [ "$COUNTER" -eq 0 ]; then
+           echo "Unable to download apk from Internet"
+           echo "Using built-in version of apk"
+           APK_PATH="tr.apk"
+           fi
+ 
+           adb install $APK_PATH
+           # remove tr_download dir if found
+           if [ -d tr_download ]; then
+                  rm -rf tr_download
+           fi
+           adb shell am start -n com.geohot.towelroot/.TowelRoot
+           echo "Click make it rain and press enter.."
+           read ch
+
+           # Double Check for root
+           echo "Verifying root.."
+           adb pull /system/xbin/su
+           if [ $? -ne 0 ]; then
+             echo "Root not found. Exiting..."
+             exit 1;
+           else
+             echo "Device has root access!"
+           fi
+           ;;
+
+  n|N|* ) echo "Fail! Cannot proceed without root access."
+          exit 1 ;;
+esac
+else 
+          echo "Device has root access!"
+fi
+
+# Remove pulled su 
+rm su
 
 echo
 
