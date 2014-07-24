@@ -22,9 +22,9 @@ cd files
 adb_detect(){
 clear
 echo
-echo ===============================================
-echo Connect device with USB debugging on...
-echo ===============================================
+echo "==============================================="
+echo "Connect device with USB debugging on..."
+echo "==============================================="
 
 eval $ADB_WAIT
 }
@@ -157,9 +157,9 @@ case $ANS in
 
 2) 
 
-echo =============================================
-echo Uninstalling recovery...
-echo =============================================
+echo "============================================="
+echo "Uninstalling recovery..."
+echo "============================================="
 adb shell "mkdir /data/local/tmp/cwm"
 adb push busybox /data/local/tmp/cwm
 adb push unin.sh /data/local/tmp/cwm
@@ -195,9 +195,9 @@ done
 # recovery_menu function definition
 recovery_menu(){
 clear
-echo =============================================
-echo Available Recovery Options
-echo =============================================
+echo "============================================="
+echo "Available Recovery Options"
+echo "============================================="
 tput setaf 6
 setterm -bold
 echo "1. Install CWM recovery"
@@ -212,9 +212,9 @@ read ANS3
 
 case $ANS3 in
 1)
-echo =============================================
-echo Installing CWM recovery...
-echo =============================================
+echo "============================================="
+echo "Installing CWM recovery..."
+echo "============================================="
 adb shell "mkdir /data/local/tmp/cwm"
 adb push recovery.sh /data/local/tmp/cwm
 adb push e2fsck.sh /data/local/tmp/cwm
@@ -227,15 +227,15 @@ adb shell "su -c /data/local/tmp/cwm/step3.sh"
 adb shell "rm -r /data/local/tmp/cwm"
 
 echo
-echo Finished!
+echo "Finished!"
 echo
 ;;
 
 2) 
 
-echo =============================================
-echo Installing TWRP recovery...
-echo =============================================
+echo "============================================="
+echo "Installing TWRP recovery..."
+echo "============================================="
 adb shell "mkdir /data/local/tmp/cwm"
 adb push recovery.sh /data/local/tmp/cwm
 adb push e2fsck.sh /data/local/tmp/cwm
@@ -248,15 +248,15 @@ adb shell "su -c /data/local/tmp/cwm/step3.sh"
 adb shell "rm -r /data/local/tmp/cwm"
 
 echo
-echo Finished!
+echo "Finished!"
 echo
 ;;
 
 3) 
 
-echo =============================================
-echo Installing philZ recovery...
-echo =============================================
+echo "============================================="
+echo "Installing philZ recovery..."
+echo "============================================="
 adb shell "mkdir /data/local/tmp/cwm"
 adb push recovery.sh /data/local/tmp/cwm
 adb push e2fsck.sh /data/local/tmp/cwm
@@ -269,7 +269,7 @@ adb shell "su -c /data/local/tmp/cwm/step3.sh"
 adb shell "rm -r /data/local/tmp/cwm"
 
 echo
-echo Finished!
+echo "Finished!"
 echo
 ;;
 
@@ -283,9 +283,9 @@ echo "Place your recovery.tar in input folder and press enter"
 read ANS2
 if [ -e ../input/recovery.tar ]; then
    echo "Recovery found."
-echo =============================================
-echo Installing recovery...
-echo =============================================
+echo "============================================="
+echo "Installing recovery..."
+echo "============================================="
 adb shell "mkdir /data/local/tmp/cwm"
 adb push recovery.sh /data/local/tmp/cwm
 adb push e2fsck.sh /data/local/tmp/cwm
@@ -297,7 +297,7 @@ adb shell "chmod 755 /data/local/tmp/cwm/step3.sh"
 adb shell "su -c /data/local/tmp/cwm/step3.sh"
 adb shell "rm -r /data/local/tmp/cwm"
 echo 
-echo Finished!
+echo "Finished!"
 else 
      echo "Recovery not found!"
      exit_menu
@@ -312,7 +312,7 @@ esac
 
 exit_menu(){
 rm_temp
-echo Auto exit in 3 seconds!
+echo "Auto exit in 3 seconds!"
 sleep 3
 exit 1;
 }
