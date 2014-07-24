@@ -8,14 +8,18 @@ CHECK_DEVICE="ro.semc.product.name"
 CHECK_DEVICE_TAOSHAN="ro.semc.product.name=Xperia L"
 CHECK_FIRMWARE="ro.build.id="
 APK_PATH="tr_download/tr.apk"
+STATUS_ROOT="No"
 
+init(){
 echo "** Recovery Installer for Xperia L - $VER   **"
 echo "**        By rachitrawat and [NUT]         **"
 echo 
 echo 
 printf "Initializing"; sleep 1; printf ".."; sleep 1; printf ".."; sleep 1;
 cd files
+}
 
+adb_detect(){
 clear
 echo
 echo ===============================================
@@ -23,24 +27,44 @@ echo Connect device with USB debugging on...
 echo ===============================================
 
 eval $ADB_WAIT
+}
 
+adb_pull_prop(){
 # Pull build.prop
-eval $ADB_PULL 
-echo
+eval $ADB_PULL
+
+# Check if build.prop pull was successful
+if [ $? -ne 0 ]; then
+echo "Cannot obtain build.prop for device."
+exit_menu;
+fi
 
 # Check if correct device is connected
 if ! grep -q "$CHECK_DEVICE_TAOSHAN" build.prop
 then
 STR=$(grep "$CHECK_DEVICE" build.prop)
-echo "${STR##*=} is not supported!"
-rm build.prop
+echo
+echo "WARNING: ${STR##*=} is not supported!"
+read -p "Do you still want to continue? (y/n) " choice
+case "$choice" in 
+y|Y ) 
+write_prop
+;;
+*)
+exit_menu
+;;
+esac
 else
-STR=$(grep "$CHECK_DEVICE" build.prop)
-echo "Device : ${STR##*=}"
-STR2=$(grep "$CHECK_FIRMWARE" build.prop)
-echo "FW : ${STR2##*=}"
-rm build.prop
+write_prop;
+fi
+}
 
+write_prop(){
+STR=$(grep "$CHECK_DEVICE" build.prop)
+STR2=$(grep "$CHECK_FIRMWARE" build.prop)
+}
+
+check_for_su(){
 # Check for su
 echo 
 adb pull /system/xbin/su
@@ -58,8 +82,6 @@ if [ $? -ne 0 ]; then
            COUNTER=1
            echo "Working Internet Connection Available!"
            echo "Downloading latest towelroot apk"
- 
-           rm test.idx
      
            # Download latest towelroot apk 
            wget -P tr_download/ https://towelroot.com/tr.apk 
@@ -88,26 +110,33 @@ if [ $? -ne 0 ]; then
            adb pull /system/xbin/su
            if [ $? -ne 0 ]; then
              echo "Root not found. Exiting..."
-             exit 1;
+             exit_menu;
            else
-             echo "Device has root access!"
+             STATUS_ROOT="Yes"
            fi
            ;;
 
   n|N|* ) echo "Fail! Cannot proceed without root access."
-          exit 1 ;;
+          exit_menu ;;
 esac
-else 
-          echo "Device has root access!"
+else
+             STATUS_ROOT="Yes"
 fi
 
 # Remove pulled su 
 rm su
 
 echo
+}
 
 # main_menu function definition
 main_menu(){
+clear;
+echo 
+echo "Device      : ${STR##*=}"
+echo "FW          : ${STR2##*=}"
+echo "Root access : $STATUS_ROOT"
+echo
 while :
 do
 tput setaf 6
@@ -269,8 +298,9 @@ adb shell "su -c /data/local/tmp/cwm/step3.sh"
 adb shell "rm -r /data/local/tmp/cwm"
 echo 
 echo Finished!
-else echo "Recovery not found!"
-   exit 
+else 
+     echo "Recovery not found!"
+     exit_menu
 fi
 ;;
 
@@ -280,8 +310,25 @@ fi
 esac
 }
 
-# call main_menu function
-main_menu
-fi
+exit_menu(){
+rm_temp
 echo Auto exit in 3 seconds!
 sleep 3
+exit 1;
+}
+
+rm_temp(){
+rm -f build.prop
+rm -f test.idx
+}
+
+# call functions
+rm_temp
+init
+adb_detect
+adb_pull_prop
+write_prop
+check_for_su
+main_menu
+
+#End
