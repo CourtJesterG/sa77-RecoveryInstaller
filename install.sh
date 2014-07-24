@@ -19,6 +19,10 @@ printf "Initializing"; sleep 1; printf ".."; sleep 1; printf ".."; sleep 1;
 cd files
 }
 
+eval_it(){
+eval $1
+} > /dev/null
+
 adb_detect(){
 clear
 echo
@@ -26,12 +30,12 @@ echo "==============================================="
 echo "Connect device with USB debugging on..."
 echo "==============================================="
 
-eval $ADB_WAIT
+eval_it "$ADB_WAIT"
 }
 
 adb_pull_prop(){
 # Pull build.prop
-eval $ADB_PULL
+eval_it "$ADB_PULL"
 
 # Check if build.prop pull was successful
 if [ $? -ne 0 ]; then
@@ -67,47 +71,50 @@ STR2=$(grep "$CHECK_FIRMWARE" build.prop)
 check_for_su(){
 # Check for su
 echo 
-adb pull /system/xbin/su
+eval_it "adb pull /system/xbin/su"
 
 # Prompt if su is not found
 if [ $? -ne 0 ]; then
    echo "Device is not rooted. Root access is required to proceed furthur."
    read -p "Do you want to root it via towelroot? (y/n)" choice
    case "$choice" in 
-   y|Y ) echo "Rooting device..."
+   y|Y ) echo "\nRooting device..."
            # Check for a working internet connection
            COUNTER=0
            wget -q --tries=20 --timeout=10 http://www.google.com -O test.idx
            if [ -s test.idx ]; then
            COUNTER=1
            echo "Working Internet Connection Available!"
-           echo "Downloading latest towelroot apk"
+           echo "Downloading latest towelroot apk..."
      
            # Download latest towelroot apk 
-           wget -P tr_download/ https://towelroot.com/tr.apk 
+           wget -P tr_download/ https://towelroot.com/tr.apk
            if [ $? -ne 0 ]; then
                COUNTER=0
            fi 
 
            # If working internet is not available or apk download somehow failed
            elif [ "$COUNTER" -eq 0 ]; then
-           echo "Unable to download apk from Internet"
-           echo "Using built-in version of apk"
+           echo "Unable to download apk from Internet!"
+           echo "Using built-in version of apk!"
            APK_PATH="tr.apk"
            fi
- 
-           adb install $APK_PATH
+          
+           # Install apk
+           echo "Installing towerlroot apk..."
+           eval_it "adb install $APK_PATH"
            # remove tr_download dir if found
            if [ -d tr_download ]; then
                   rm -rf tr_download
            fi
-           adb shell am start -n com.geohot.towelroot/.TowelRoot
+           # Run TowelRoot activity
+           eval_it "adb shell am start -n com.geohot.towelroot/.TowelRoot"
            echo "Click make it rain and press enter.."
            read ch
 
            # Double Check for root
            echo "Verifying root.."
-           adb pull /system/xbin/su
+           eval_it "adb pull /system/xbin/su"
            if [ $? -ne 0 ]; then
              echo "Root not found. Exiting..."
              exit_menu;
@@ -123,14 +130,13 @@ else
              STATUS_ROOT="Yes"
 fi
 
-# Remove pulled su 
-rm su
-
 echo
 }
 
 # main_menu function definition
 main_menu(){
+# Remove temp files once we reach main menu
+rm_temp
 clear;
 echo 
 echo "Device      : ${STR##*=}"
@@ -175,11 +181,12 @@ echo "Finished!"
 
 if which xdg-open > /dev/null
 then
-  xdg-open http://forum.xda-developers.com/xperia-l/orig-development/cwm-recovery-installer-t2589320
+  eval_it "xdg-open http://forum.xda-developers.com/xperia-l/orig-development/cwm-recovery-installer-t2589320"
 elif which gnome-open > /dev/null
 then
   gnome-open URL
 fi
+echo
 ;;
 
 4)
@@ -311,7 +318,6 @@ esac
 }
 
 exit_menu(){
-rm_temp
 echo "Auto exit in 3 seconds!"
 sleep 3
 exit 1;
@@ -319,7 +325,9 @@ exit 1;
 
 rm_temp(){
 rm -f build.prop
+rm -f su
 rm -f test.idx
+rm -rf tr_download
 }
 
 # call functions
@@ -331,4 +339,4 @@ write_prop
 check_for_su
 main_menu
 
-#End
+# End
