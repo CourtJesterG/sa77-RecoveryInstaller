@@ -5,6 +5,9 @@ BUSYBOX=/data/local/tmp/cwm/busybox
 echo "remount /system writable"
 ${BUSYBOX} mount -o remount,rw /system
 
+echo "copy recovery-version.txt to system."
+${BUSYBOX} cp /data/local/tmp/cwm/recovery-version.txt /system/bin/recovery-version.txt
+
 echo "copy busybox to system."
 ${BUSYBOX} cp /data/local/tmp/cwm/busybox /system/xbin/busybox
 ${BUSYBOX} chmod 755 /system/xbin/busybox

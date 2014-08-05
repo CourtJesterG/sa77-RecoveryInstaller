@@ -17,6 +17,7 @@ echo
 echo 
 printf "Initializing"; sleep 1; printf ".."; sleep 1; printf ".."; sleep 1;
 cd files
+echo "Version=v${VER}" > recovery-version.txt
 }
 
 eval_it(){
@@ -66,6 +67,17 @@ fi
 write_prop(){
 STR=$(grep "$CHECK_DEVICE" build.prop)
 STR2=$(grep "$CHECK_FIRMWARE" build.prop)
+}
+
+check_prev_install(){
+eval_it "adb pull /system/bin/recovery-version.txt"
+if [ $? -eq 0 ]; then
+is_installed="Yes"
+PREV_VINFO=$(grep "Version" recovery-version.txt)
+else
+is_installed="No"
+PREV_VINFO=""
+fi
 }
 
 check_for_su(){
@@ -139,9 +151,10 @@ main_menu(){
 rm_temp
 clear;
 echo 
-echo "Device      : ${STR##*=}"
-echo "FW          : ${STR2##*=}"
-echo "Root access : $STATUS_ROOT"
+echo "Device           : ${STR##*=}"
+echo "FW               : ${STR2##*=}"
+echo "Root access      : $STATUS_ROOT"
+echo "Has Recovery     : ${is_installed} ${PREV_VINFO##*=}" 
 echo
 while :
 do
@@ -228,6 +241,7 @@ adb push e2fsck.sh /data/local/tmp/cwm
 adb push cwm/recovery.tar /data/local/tmp/cwm
 adb push busybox /data/local/tmp/cwm
 adb push step3.sh /data/local/tmp/cwm
+adb push recovery-version.txt /data/local/tmp/cwm
 adb shell "chmod 755 /data/local/tmp/cwm/busybox"
 adb shell "chmod 755 /data/local/tmp/cwm/step3.sh"
 adb shell "su -c /data/local/tmp/cwm/step3.sh"
@@ -249,6 +263,7 @@ adb push e2fsck.sh /data/local/tmp/cwm
 adb push twrp/recovery.tar /data/local/tmp/cwm
 adb push busybox /data/local/tmp/cwm
 adb push step3.sh /data/local/tmp/cwm
+adb push recovery-version.txt /data/local/tmp/cwm
 adb shell "chmod 755 /data/local/tmp/cwm/busybox"
 adb shell "chmod 755 /data/local/tmp/cwm/step3.sh"
 adb shell "su -c /data/local/tmp/cwm/step3.sh"
@@ -270,6 +285,7 @@ adb push e2fsck.sh /data/local/tmp/cwm
 adb push philz/recovery.tar /data/local/tmp/cwm
 adb push busybox /data/local/tmp/cwm
 adb push step3.sh /data/local/tmp/cwm
+adb push recovery-version.txt /data/local/tmp/cwm
 adb shell "chmod 755 /data/local/tmp/cwm/busybox"
 adb shell "chmod 755 /data/local/tmp/cwm/step3.sh"
 adb shell "su -c /data/local/tmp/cwm/step3.sh"
@@ -299,6 +315,7 @@ adb push e2fsck.sh /data/local/tmp/cwm
 adb push ../input/recovery.tar /data/local/tmp/cwm
 adb push busybox /data/local/tmp/cwm
 adb push step3.sh /data/local/tmp/cwm
+adb push recovery-version.txt /data/local/tmp/cwm
 adb shell "chmod 755 /data/local/tmp/cwm/busybox"
 adb shell "chmod 755 /data/local/tmp/cwm/step3.sh"
 adb shell "su -c /data/local/tmp/cwm/step3.sh"
@@ -337,6 +354,7 @@ adb_detect
 adb_pull_prop
 write_prop
 check_for_su
+check_prev_install
 main_menu
 
 # End
