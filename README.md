@@ -1,6 +1,9 @@
 Recovery-Installer
 ==================
 
+Your warranty may be void.
+The developer cannot be held responsible for any damage done to device.
+
 Recovey installer for locked bootloader. Compatible with Windows/Linux/Mac.
 
 Uses e2fsck as hijack binary.
@@ -12,13 +15,13 @@ Requirements:
 Changelog:
 
 v1.0
-*Initial release
+* Initial release
 
 v1.1
-*changed from sa77 to a e2fsck hijack
+* changed from sa77 to a e2fsck hijack
 
 v1.2
-*updated CWM to 6.0.4.8
+* updated CWM to 6.0.4.8
 
 v1.4
 * UI enhancements

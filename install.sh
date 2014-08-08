@@ -1,4 +1,3 @@
-setterm -bold
 VER="1.8"
 ADB_WAIT="adb wait-for-device"
 ADB_KILL="adb kill-server"
@@ -11,11 +10,16 @@ APK_PATH="tr_download/tr.apk"
 STATUS_ROOT="No"
 
 init(){
-echo "** Recovery Installer for Xperia L - $VER   **"
-echo "**        By rachitrawat and [NUT]         **"
-echo 
-echo 
-printf "Initializing"; sleep 1; printf ".."; sleep 1; printf ".."; sleep 1;
+FILE=`dirname $0`/README.md
+zenity --text-info \
+       --title="Disclaimer" \
+       --filename=$FILE \
+       --checkbox="I read and accept the terms."
+
+case $? in
+    1) 
+        exit;;
+esac
 cd files
 echo "Version=v${VER}" > recovery-version.txt
 }
@@ -40,8 +44,8 @@ eval_it "$ADB_PULL"
 
 # Check if build.prop pull was successful
 if [ $? -ne 0 ]; then
-echo "Cannot obtain build.prop for device."
-exit_menu;
+FLAG="Cannot obtain build.prop for device."
+exit_menu "$FLAG";
 fi
 
 # Check if correct device is connected
@@ -49,14 +53,14 @@ if ! grep -q "$CHECK_DEVICE_TAOSHAN" build.prop
 then
 STR=$(grep "$CHECK_DEVICE" build.prop)
 echo
-echo "WARNING: ${STR##*=} is not supported!"
-read -p "Do you still want to continue? (y/n) " choice
-case "$choice" in 
-y|Y ) 
+zenity --question --text="WARNING: ${STR##*=} is not supported!\nDo you still want to continue?"
+case "$?" in 
+0) 
 write_prop
 ;;
 *)
-exit_menu
+FLAG="Unsupported Device!"
+exit_menu "$FLAG"
 ;;
 esac
 else
@@ -87,10 +91,9 @@ eval_it "adb pull /system/xbin/su"
 
 # Prompt if su is not found
 if [ $? -ne 0 ]; then
-   echo "Device is not rooted. Root access is required to proceed furthur."
-   read -p "Do you want to root it via towelroot? (y/n)" choice
-   case "$choice" in 
-   y|Y ) echo "\nRooting device..."
+   zenity --question --text="Device is not rooted! Root access is required to proceed furthur.\nDo you want to root it via towelroot?"
+   case "$?" in 
+   0 ) echo "\nRooting device..."
            # Check for a working internet connection
            COUNTER=0
            wget -q --tries=20 --timeout=10 http://www.google.com -O test.idx
@@ -128,15 +131,15 @@ if [ $? -ne 0 ]; then
            echo "Verifying root.."
            eval_it "adb pull /system/xbin/su"
            if [ $? -ne 0 ]; then
-             echo "Root not found. Exiting..."
-             exit_menu;
+             FLAG="Root not found. Exiting..."
+             exit_menu "$FLAG";
            else
              STATUS_ROOT="Yes"
            fi
            ;;
 
-  n|N|* ) echo "Fail! Cannot proceed without root access."
-          exit_menu ;;
+  * ) FLAG="Fail! Cannot proceed without root access."
+          exit_menu "$FLAG";;
 esac
 else
              STATUS_ROOT="Yes"
@@ -163,7 +166,8 @@ setterm -bold
 echo "1. Install a recovery"
 echo "2. Uninstall existing recovery"
 echo "3. View XDA thread"
-echo "4. Exit"
+echo "4. About"
+echo "5. Exit"
 tput sgr0
 printf "Enter choice:"
 read ANS
@@ -176,16 +180,17 @@ case $ANS in
 
 2) 
 
-echo "============================================="
-echo "Uninstalling recovery..."
-echo "============================================="
-adb shell "mkdir /data/local/tmp/cwm"
-adb push busybox /data/local/tmp/cwm
-adb push unin.sh /data/local/tmp/cwm
-adb shell "chmod 755 /data/local/tmp/cwm/busybox"
-adb shell "chmod 755 /data/local/tmp/cwm/unin.sh"
-adb shell "su -c /data/local/tmp/cwm/unin.sh"
-adb shell "rm -r /data/local/tmp/cwm"
+(echo "20";
+adb shell "mkdir /data/local/tmp/recovery"
+adb push busybox /data/local/tmp/recovery
+adb push unin.sh /data/local/tmp/recovery
+echo "40";
+adb shell "chmod 755 /data/local/tmp/recovery/busybox"
+adb shell "chmod 755 /data/local/tmp/recovery/unin.sh"
+echo "60";
+adb shell "su -c /data/local/tmp/recovery/unin.sh"
+adb shell "rm -r /data/local/tmp/recovery"
+echo "80"; ) | zenity --progress --text="Uninstalling recovery" --percentage=0 --auto-close
 echo 
 echo "Finished!"
 ;;
@@ -202,9 +207,12 @@ fi
 echo
 ;;
 
-4)
+4) 
+zenity --info --title="Recovery Installer v1.8" --text="Programmed by rachitrawat\nContributors: [NUT]"
  
-exit
+;;
+
+5) exit
 ;;
 
 esac
@@ -214,117 +222,97 @@ done
 
 # recovery_menu function definition
 recovery_menu(){
-clear
-echo "============================================="
-echo "Available Recovery Options"
-echo "============================================="
-tput setaf 6
-setterm -bold
-echo "1. Install CWM recovery"
-echo "2. Install TWRP recovery"
-echo "3. Install philZ recovery"
-echo "4. Install custom recovery.tar"
-echo "5. Back"
+OUTPUT=$(zenity --list \
+ --title="Choose desired recovery" \
+ --column="Recovery" --column="Version" \
+  CWM 6.0.5.0 \
+  TWRP 2.7.0 \
+  Philz 6.47.6 \
+  Custom -) 
 
-tput sgr0
-printf "Enter choice:"
-read ANS3
-
-case $ANS3 in
-1)
-echo "============================================="
-echo "Installing CWM recovery..."
-echo "============================================="
-adb shell "mkdir /data/local/tmp/cwm"
-adb push recovery.sh /data/local/tmp/cwm
-adb push e2fsck.sh /data/local/tmp/cwm
-adb push cwm/recovery.tar /data/local/tmp/cwm
-adb push busybox /data/local/tmp/cwm
-adb push step3.sh /data/local/tmp/cwm
-adb push recovery-version.txt /data/local/tmp/cwm
-adb shell "chmod 755 /data/local/tmp/cwm/busybox"
-adb shell "chmod 755 /data/local/tmp/cwm/step3.sh"
-adb shell "su -c /data/local/tmp/cwm/step3.sh"
-adb shell "rm -r /data/local/tmp/cwm"
-
-echo
+case $OUTPUT in
+"CWM")
+(echo "20";
+adb shell "mkdir /data/local/tmp/recovery";
+adb push recovery.sh /data/local/tmp/recovery;
+adb push e2fsck.sh /data/local/tmp/recovery;
+echo "40";
+adb push cwm/recovery.tar /data/local/tmp/recovery;
+adb push busybox /data/local/tmp/recovery;
+adb push step3.sh /data/local/tmp/recovery;
+adb push recovery-version.txt /data/local/tmp/recovery;
+echo "60";
+adb shell "chmod 755 /data/local/tmp/recovery/busybox";
+adb shell "chmod 755 /data/local/tmp/recovery/step3.sh";
+adb shell "su -c /data/local/tmp/recovery/step3.sh";
+adb shell "rm -r /data/local/tmp/recovery";
+echo "80";) | zenity --progress --text="Installing $OUTPUT recovery" --percentage=0 --auto-close
 echo "Finished!"
 echo
 ;;
 
-2) 
-
-echo "============================================="
-echo "Installing TWRP recovery..."
-echo "============================================="
-adb shell "mkdir /data/local/tmp/cwm"
-adb push recovery.sh /data/local/tmp/cwm
-adb push e2fsck.sh /data/local/tmp/cwm
-adb push twrp/recovery.tar /data/local/tmp/cwm
-adb push busybox /data/local/tmp/cwm
-adb push step3.sh /data/local/tmp/cwm
-adb push recovery-version.txt /data/local/tmp/cwm
-adb shell "chmod 755 /data/local/tmp/cwm/busybox"
-adb shell "chmod 755 /data/local/tmp/cwm/step3.sh"
-adb shell "su -c /data/local/tmp/cwm/step3.sh"
-adb shell "rm -r /data/local/tmp/cwm"
-
-echo
+"TWRP") 
+(echo "20";
+adb shell "mkdir /data/local/tmp/recovery";
+adb push recovery.sh /data/local/tmp/recovery;
+adb push e2fsck.sh /data/local/tmp/recovery;
+echo "40";
+adb push twrp/recovery.tar /data/local/tmp/recovery;
+adb push busybox /data/local/tmp/recovery;
+adb push step3.sh /data/local/tmp/recovery;
+adb push recovery-version.txt /data/local/tmp/recovery;
+echo "60";
+adb shell "chmod 755 /data/local/tmp/recovery/busybox";
+adb shell "chmod 755 /data/local/tmp/recovery/step3.sh";
+adb shell "su -c /data/local/tmp/recovery/step3.sh";
+adb shell "rm -r /data/local/tmp/recovery";
+echo "80";) | zenity --progress --text="Installing $OUTPUT recovery" --percentage=0 --auto-close
 echo "Finished!"
 echo
 ;;
 
-3) 
-
-echo "============================================="
-echo "Installing philZ recovery..."
-echo "============================================="
-adb shell "mkdir /data/local/tmp/cwm"
-adb push recovery.sh /data/local/tmp/cwm
-adb push e2fsck.sh /data/local/tmp/cwm
-adb push philz/recovery.tar /data/local/tmp/cwm
-adb push busybox /data/local/tmp/cwm
-adb push step3.sh /data/local/tmp/cwm
-adb push recovery-version.txt /data/local/tmp/cwm
-adb shell "chmod 755 /data/local/tmp/cwm/busybox"
-adb shell "chmod 755 /data/local/tmp/cwm/step3.sh"
-adb shell "su -c /data/local/tmp/cwm/step3.sh"
-adb shell "rm -r /data/local/tmp/cwm"
-
-echo
+"Philz") 
+(echo "20";
+adb shell "mkdir /data/local/tmp/recovery";
+adb push recovery.sh /data/local/tmp/recovery;
+adb push e2fsck.sh /data/local/tmp/recovery;
+echo "40";
+adb push philz/recovery.tar /data/local/tmp/recovery;
+adb push busybox /data/local/tmp/recovery;
+adb push step3.sh /data/local/tmp/recovery;
+adb push recovery-version.txt /data/local/tmp/recovery;
+echo "60";
+adb shell "chmod 755 /data/local/tmp/recovery/busybox";
+adb shell "chmod 755 /data/local/tmp/recovery/step3.sh";
+adb shell "su -c /data/local/tmp/recovery/step3.sh";
+adb shell "rm -r /data/local/tmp/recovery";
+echo "80";) | zenity --progress --text="Installing $OUTPUT recovery" --percentage=0 --auto-close
 echo "Finished!"
 echo
 ;;
 
-4) 
+"Custom") 
+DIR_CUSTOM=$(zenity --file-selection --title="Select recovery.tar for installation")
 
-if [ ! -d ../input ]
-then mkdir ../input
-fi
-
-echo "Place your recovery.tar in input folder and press enter"
-read ANS2
-if [ -e ../input/recovery.tar ]; then
-   echo "Recovery found."
-echo "============================================="
-echo "Installing recovery..."
-echo "============================================="
-adb shell "mkdir /data/local/tmp/cwm"
-adb push recovery.sh /data/local/tmp/cwm
-adb push e2fsck.sh /data/local/tmp/cwm
-adb push ../input/recovery.tar /data/local/tmp/cwm
-adb push busybox /data/local/tmp/cwm
-adb push step3.sh /data/local/tmp/cwm
-adb push recovery-version.txt /data/local/tmp/cwm
-adb shell "chmod 755 /data/local/tmp/cwm/busybox"
-adb shell "chmod 755 /data/local/tmp/cwm/step3.sh"
-adb shell "su -c /data/local/tmp/cwm/step3.sh"
-adb shell "rm -r /data/local/tmp/cwm"
-echo 
-echo "Finished!"
-else 
-     echo "Recovery not found!"
-     exit_menu
+if [ -f $DIR_CUSTOM ] && [ "${DIR_CUSTOM##*.}" = "tar" ];then
+     mkdir -p input
+     cp $DIR_CUSTOM input/recovery.tar
+     adb shell "mkdir /data/local/tmp/recovery"
+     adb push recovery.sh /data/local/tmp/recovery
+     adb push e2fsck.sh /data/local/tmp/recovery
+     adb push input/recovery.tar /data/local/tmp/recovery
+     adb push busybox /data/local/tmp/recovery
+     adb push step3.sh /data/local/tmp/recovery
+     adb push recovery-version.txt /data/local/tmp/recovery
+     adb shell "chmod 755 /data/local/tmp/recovery/busybox"
+     adb shell "chmod 755 /data/local/tmp/recovery/step3.sh"
+     adb shell "su -c /data/local/tmp/recovery/step3.sh"
+     adb shell "rm -r /data/local/tmp/recovery"
+     echo 
+     echo "Finished!"
+else
+     FLAG="recovery.tar not found or invalid format!"
+     exit_menu "$FLAG";
 fi
 ;;
 
@@ -335,8 +323,7 @@ esac
 }
 
 exit_menu(){
-echo "Auto exit in 3 seconds!"
-sleep 3
+zenity --error --text="$1"
 exit 1;
 }
 

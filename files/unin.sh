@@ -1,5 +1,5 @@
-#!/data/local/tmp/cwm/busybox sh
-BUSYBOX=/data/local/tmp/cwm/busybox
+#!/data/local/tmp/recovery/busybox sh
+BUSYBOX=/data/local/tmp/recovery/busybox
 ${BUSYBOX} mount -o remount,rw /system
 ${BUSYBOX} rm -f /system/bin/recovery.tar
 ${BUSYBOX} rm -f /system/bin/recovery.sh

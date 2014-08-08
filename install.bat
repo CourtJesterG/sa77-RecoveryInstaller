@@ -39,16 +39,16 @@ IF %M%==7 GOTO seven
 echo =============================================
 echo Installing CWM recovery...
 echo =============================================
-adb shell "mkdir /data/local/tmp/cwm"
-adb push recovery.sh /data/local/tmp/cwm
-adb push e2fsck.sh /data/local/tmp/cwm
-adb push cwm/recovery.tar /data/local/tmp/cwm
-adb push busybox /data/local/tmp/cwm
-adb push step3.sh /data/local/tmp/cwm
-adb shell "chmod 755 /data/local/tmp/cwm/busybox"
-adb shell "chmod 755 /data/local/tmp/cwm/step3.sh"
-adb shell "su -c /data/local/tmp/cwm/step3.sh"
-adb shell "rm -r /data/local/tmp/cwm"
+adb shell "mkdir /data/local/tmp/recovery"
+adb push recovery.sh /data/local/tmp/recovery
+adb push e2fsck.sh /data/local/tmp/recovery
+adb push cwm/recovery.tar /data/local/tmp/recovery
+adb push busybox /data/local/tmp/recovery
+adb push step3.sh /data/local/tmp/recovery
+adb shell "chmod 755 /data/local/tmp/recovery/busybox"
+adb shell "chmod 755 /data/local/tmp/recovery/step3.sh"
+adb shell "su -c /data/local/tmp/recovery/step3.sh"
+adb shell "rm -r /data/local/tmp/recovery"
 
 adb kill-server
 
@@ -61,16 +61,16 @@ goto menu
 echo =============================================
 echo Installing twrp recovery...
 echo =============================================
-adb shell "mkdir /data/local/tmp/cwm"
-adb push recovery.sh /data/local/tmp/cwm
-adb push e2fsck.sh /data/local/tmp/cwm
-adb push twrp/recovery.tar /data/local/tmp/cwm
-adb push busybox /data/local/tmp/cwm
-adb push step3.sh /data/local/tmp/cwm
-adb shell "chmod 755 /data/local/tmp/cwm/busybox"
-adb shell "chmod 755 /data/local/tmp/cwm/step3.sh"
-adb shell "su -c /data/local/tmp/cwm/step3.sh"
-adb shell "rm -r /data/local/tmp/cwm"
+adb shell "mkdir /data/local/tmp/recovery"
+adb push recovery.sh /data/local/tmp/recovery
+adb push e2fsck.sh /data/local/tmp/recovery
+adb push twrp/recovery.tar /data/local/tmp/recovery
+adb push busybox /data/local/tmp/recovery
+adb push step3.sh /data/local/tmp/recovery
+adb shell "chmod 755 /data/local/tmp/recovery/busybox"
+adb shell "chmod 755 /data/local/tmp/recovery/step3.sh"
+adb shell "su -c /data/local/tmp/recovery/step3.sh"
+adb shell "rm -r /data/local/tmp/recovery"
 
 adb kill-server
 
@@ -83,16 +83,16 @@ goto menu
 echo =============================================
 echo Installing philZ recovery...
 echo =============================================
-adb shell "mkdir /data/local/tmp/cwm"
-adb push recovery.sh /data/local/tmp/cwm
-adb push e2fsck.sh /data/local/tmp/cwm
-adb push philz/recovery.tar /data/local/tmp/cwm
-adb push busybox /data/local/tmp/cwm
-adb push step3.sh /data/local/tmp/cwm
-adb shell "chmod 755 /data/local/tmp/cwm/busybox"
-adb shell "chmod 755 /data/local/tmp/cwm/step3.sh"
-adb shell "su -c /data/local/tmp/cwm/step3.sh"
-adb shell "rm -r /data/local/tmp/cwm"
+adb shell "mkdir /data/local/tmp/recovery"
+adb push recovery.sh /data/local/tmp/recovery
+adb push e2fsck.sh /data/local/tmp/recovery
+adb push philz/recovery.tar /data/local/tmp/recovery
+adb push busybox /data/local/tmp/recovery
+adb push step3.sh /data/local/tmp/recovery
+adb shell "chmod 755 /data/local/tmp/recovery/busybox"
+adb shell "chmod 755 /data/local/tmp/recovery/step3.sh"
+adb shell "su -c /data/local/tmp/recovery/step3.sh"
+adb shell "rm -r /data/local/tmp/recovery"
 
 adb kill-server
 
@@ -108,16 +108,16 @@ pause>>null
 echo =============================================
 echo Installing recovery...
 echo =============================================
-adb shell "mkdir /data/local/tmp/cwm"
-adb push recovery.sh /data/local/tmp/cwm
-adb push e2fsck.sh /data/local/tmp/cwm
-adb push input/recovery.tar /data/local/tmp/cwm
-adb push busybox /data/local/tmp/cwm
-adb push step3.sh /data/local/tmp/cwm
-adb shell "chmod 755 /data/local/tmp/cwm/busybox"
-adb shell "chmod 755 /data/local/tmp/cwm/step3.sh"
-adb shell "su -c /data/local/tmp/cwm/step3.sh"
-adb shell "rm -r /data/local/tmp/cwm"
+adb shell "mkdir /data/local/tmp/recovery"
+adb push recovery.sh /data/local/tmp/recovery
+adb push e2fsck.sh /data/local/tmp/recovery
+adb push input/recovery.tar /data/local/tmp/recovery
+adb push busybox /data/local/tmp/recovery
+adb push step3.sh /data/local/tmp/recovery
+adb shell "chmod 755 /data/local/tmp/recovery/busybox"
+adb shell "chmod 755 /data/local/tmp/recovery/step3.sh"
+adb shell "su -c /data/local/tmp/recovery/step3.sh"
+adb shell "rm -r /data/local/tmp/recovery"
 echo 
 echo Finished!
 echo.
@@ -127,13 +127,13 @@ goto menu
 echo =============================================
 echo Uninstalling recovery..
 echo =============================================
-adb shell "mkdir /data/local/tmp/cwm"
-adb push busybox /data/local/tmp/cwm
-adb push unin.sh /data/local/tmp/cwm
-adb shell "chmod 755 /data/local/tmp/cwm/busybox"
-adb shell "chmod 755 /data/local/tmp/cwm/unin.sh"
-adb shell "su -c /data/local/tmp/cwm/unin.sh"
-adb shell "rm -r /data/local/tmp/cwm"
+adb shell "mkdir /data/local/tmp/recovery"
+adb push busybox /data/local/tmp/recovery
+adb push unin.sh /data/local/tmp/recovery
+adb shell "chmod 755 /data/local/tmp/recovery/busybox"
+adb shell "chmod 755 /data/local/tmp/recovery/unin.sh"
+adb shell "su -c /data/local/tmp/recovery/unin.sh"
+adb shell "rm -r /data/local/tmp/recovery"
 echo. 
 echo Finished!
 echo.
